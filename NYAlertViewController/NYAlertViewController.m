@@ -364,7 +364,7 @@ static CGFloat const kDefaultDismissalAnimationDuration = 0.6f;
     _disabledButtonColor = [UIColor lightGrayColor];
     _disabledButtonTitleColor = [UIColor whiteColor];
     
-    _buttonCornerRadius = 6.0f;
+    _buttonCornerRadius = 0.0f;
     
     _transitionStyle = NYAlertViewControllerTransitionStyleSlideFromTop;
     

@@ -112,16 +112,6 @@
 
 - (void)setEnabled:(BOOL)enabled {
     [super setEnabled:enabled];
-    
-//    if (!enabled) {
-//        self.backgroundColor = [UIColor lightGrayColor];
-//        self.layer.borderColor = self.tintColor.CGColor;
-//        [self setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-//    } else {
-//        self.backgroundColor = self.tintColor;
-//        self.layer.borderColor = self.tintColor.CGColor;
-//        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    }
 }
 
 - (void)tintColorDidChange {
@@ -147,30 +137,6 @@
 - (void)setCornerRadius:(CGFloat)cornerRadius {
     self.layer.cornerRadius = cornerRadius;
 }
-
-//- (void)setEnabled:(BOOL)enabled {
-//    [super setEnabled:enabled];
-//
-//    if (enabled) {
-//        self.layer.backgroundColor = self.tintColor.CGColor;
-//        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    } else {
-//        self.layer.backgroundColor = [UIColor lightGrayColor].CGColor;
-//        [self setTitleColor:[UIColor darkGrayColor] forState:UIControlStateNormal];
-//    }
-//}
-
-//- (void)setType:(NYAlertViewButtonType)type {
-//    _type = type;
-//    
-//    if (type == NYAlertViewButtonTypeBordered) {
-//        self.layer.backgroundColor = [UIColor clearColor].CGColor;
-//        [self setTitleColor:self.tintColor forState:UIControlStateNormal];
-//    } else {
-//        self.layer.backgroundColor = self.tintColor.CGColor;
-//        [self setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    }
-//}
 
 - (CGSize)intrinsicContentSize {
     if (self.hidden) {
@@ -241,7 +207,8 @@
         _alertBackgroundView = [[UIView alloc] initWithFrame:CGRectZero];
         [self.alertBackgroundView setTranslatesAutoresizingMaskIntoConstraints:NO];
         self.alertBackgroundView.backgroundColor = [UIColor colorWithWhite:0.97f alpha:1.0f];
-        self.alertBackgroundView.layer.cornerRadius = 6.0f;
+        self.alertBackgroundView.layer.cornerRadius = 2.0f;
+        self.alertBackgroundView.clipsToBounds = YES;
         [self addSubview:_alertBackgroundView];
         
         _titleLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -259,6 +226,7 @@
         [self.messageTextView setContentHuggingPriority:0 forAxis:UILayoutConstraintAxisVertical];
         [self.messageTextView setContentCompressionResistancePriority:UILayoutPriorityDefaultHigh forAxis:UILayoutConstraintAxisVertical];
         self.messageTextView.editable = NO;
+        self.messageTextView.selectable = NO;
         self.messageTextView.textAlignment = NSTextAlignmentCenter;
         self.messageTextView.textColor = [UIColor darkGrayColor];
         self.messageTextView.font = [UIFont preferredFontForTextStyle:UIFontTextStyleSubheadline];
@@ -348,7 +316,7 @@
                                                                                          metrics:nil
                                                                                            views:NSDictionaryOfVariableBindings(_actionButtonContainerView)]];
         
-        [self.alertBackgroundView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[_titleLabel]-2-[_messageTextView][_contentViewContainerView][_textFieldContainerView][_actionButtonContainerView]-|"
+        [self.alertBackgroundView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-32-[_titleLabel]-16-[_messageTextView][_contentViewContainerView][_textFieldContainerView]-32-[_actionButtonContainerView]|"
                                                                                          options:0
                                                                                          metrics:nil
                                                                                            views:NSDictionaryOfVariableBindings(_titleLabel,
@@ -398,52 +366,6 @@
                                                                                                 views:NSDictionaryOfVariableBindings(_contentView)]];
     }
 }
-
-//- (void)actionButtonPressed:(NYAlertViewButton *)button {
-//    NYAlertAction *action = self.actions[button.tag];
-//    action.handler(action);
-//}
-
-//- (void)setActions:(NSArray *)actions {
-////    _actions = actions;
-////    
-//    NSMutableArray *buttons = [NSMutableArray array];
-//    
-//    // Create buttons for each action
-//    for (int i = 0; i < [actions count]; i++) {
-//        UIAlertAction *action = actions[i];
-//        
-//        NYAlertViewButton *button = [[NYAlertViewButton alloc] initWithFrame:CGRectZero];
-//        
-//        button.tag = i;
-//        [button addTarget:self action:@selector(actionButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-//        
-//        button.cornerRadius = self.buttonCornerRadius;
-//        [button setTranslatesAutoresizingMaskIntoConstraints:NO];
-//        [button setTitle:action.title forState:UIControlStateNormal];
-//        
-//        if (action.style == UIAlertActionStyleCancel) {
-//            [button setTitleColor:self.cancelButtonTitleColor forState:UIControlStateNormal];
-//            [button setTitleColor:self.cancelButtonTitleColor forState:UIControlStateHighlighted];
-//            button.tintColor = self.cancelButtonColor;
-//            button.titleLabel.font = self.cancelButtonTitleFont;
-//        } else if (action.style == UIAlertActionStyleDestructive) {
-//            [button setTitleColor:self.destructiveButtonTitleColor forState:UIControlStateNormal];
-//            [button setTitleColor:self.destructiveButtonTitleColor forState:UIControlStateHighlighted];
-//            button.tintColor = self.destructiveButtonColor;
-//            button.titleLabel.font = self.destructiveButtonTitleFont;
-//        } else {
-//            [button setTitleColor:self.buttonTitleColor forState:UIControlStateNormal];
-//            [button setTitleColor:self.buttonTitleColor forState:UIControlStateHighlighted];
-//            button.tintColor = self.buttonColor;
-//            button.titleLabel.font = self.buttonTitleFont;
-//        }
-//        
-//        [buttons addObject:button];
-//    }
-//    
-//    self.actionButtons = buttons;
-//}
 
 - (void)setTextFields:(NSArray *)textFields {
     for (UITextField *textField in self.textFields) {
@@ -510,17 +432,17 @@
                                                                                   multiplier:1.0f
                                                                                     constant:0.0f]];
         
-        [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[firstButton]-[lastButton]-|"
+        [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[firstButton][lastButton]|"
                                                                                                options:NSLayoutFormatAlignAllCenterY
                                                                                                metrics:nil
                                                                                                  views:NSDictionaryOfVariableBindings(firstButton, lastButton)]];
         
-        [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[firstButton(40)]|"
+        [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-[firstButton(44)]|"
                                                                                                options:0
                                                                                                metrics:nil
                                                                                                  views:NSDictionaryOfVariableBindings(_contentViewContainerView, firstButton)]];
         
-        [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[lastButton(40)]"
+        [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[lastButton(44)]"
                                                                                                options:0
                                                                                                metrics:nil
                                                                                                  views:NSDictionaryOfVariableBindings(lastButton)]];
@@ -530,12 +452,12 @@
             
             [self.actionButtonContainerView addSubview:actionButton];
             
-            [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|-[actionButton]-|"
+            [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"H:|[actionButton]|"
                                                                                                    options:0
                                                                                                    metrics:nil
                                                                                                      views:NSDictionaryOfVariableBindings(actionButton)]];
             
-            [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[actionButton(40)]"
+            [self.actionButtonContainerView addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:[actionButton(44)]"
                                                                                                    options:0
                                                                                                    metrics:nil
                                                                                                      views:NSDictionaryOfVariableBindings(actionButton)]];
